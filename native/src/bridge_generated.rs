@@ -65,6 +65,16 @@ fn wire_greet_impl(port_: MessagePort, name: impl Wire2Api<String> + UnwindSafe)
         },
     )
 }
+fn wire_if_sys_info_supported_impl(port_: MessagePort) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap::<_, _, _, bool>(
+        WrapInfo {
+            debug_name: "if_sys_info_supported",
+            port: Some(port_),
+            mode: FfiCallMode::Normal,
+        },
+        move || move |task_callback| Ok(if_sys_info_supported()),
+    )
+}
 fn wire_get_sys_info_impl(port_: MessagePort) {
     FLUTTER_RUST_BRIDGE_HANDLER.wrap::<_, _, _, Components>(
         WrapInfo {
@@ -73,6 +83,16 @@ fn wire_get_sys_info_impl(port_: MessagePort) {
             mode: FfiCallMode::Normal,
         },
         move || move |task_callback| Ok(get_sys_info()),
+    )
+}
+fn wire_get_cpu_impl(port_: MessagePort) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap::<_, _, _, String>(
+        WrapInfo {
+            debug_name: "get_cpu",
+            port: Some(port_),
+            mode: FfiCallMode::Normal,
+        },
+        move || move |task_callback| Ok(get_cpu()),
     )
 }
 fn wire_stream_cpu_usage_impl(port_: MessagePort) {
@@ -84,6 +104,26 @@ fn wire_stream_cpu_usage_impl(port_: MessagePort) {
         },
         move || {
             move |task_callback| Ok(stream_cpu_usage(task_callback.stream_sink::<_, Vec<f32>>()))
+        },
+    )
+}
+fn wire_calculate_impl(
+    port_: MessagePort,
+    first_value: impl Wire2Api<i32> + UnwindSafe,
+    second_value: impl Wire2Api<i32> + UnwindSafe,
+    operator: impl Wire2Api<Operator> + UnwindSafe,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap::<_, _, _, i32>(
+        WrapInfo {
+            debug_name: "calculate",
+            port: Some(port_),
+            mode: FfiCallMode::Normal,
+        },
+        move || {
+            let api_first_value = first_value.wire2api();
+            let api_second_value = second_value.wire2api();
+            let api_operator = operator.wire2api();
+            move |task_callback| Ok(calculate(api_first_value, api_second_value, api_operator))
         },
     )
 }
@@ -110,6 +150,22 @@ where
     }
 }
 
+impl Wire2Api<i32> for i32 {
+    fn wire2api(self) -> i32 {
+        self
+    }
+}
+impl Wire2Api<Operator> for i32 {
+    fn wire2api(self) -> Operator {
+        match self {
+            0 => Operator::Plus,
+            1 => Operator::Minus,
+            2 => Operator::Multiply,
+            3 => Operator::Divide,
+            _ => unreachable!("Invalid variant for Operator: {}", self),
+        }
+    }
+}
 impl Wire2Api<u8> for u8 {
     fn wire2api(self) -> u8 {
         self

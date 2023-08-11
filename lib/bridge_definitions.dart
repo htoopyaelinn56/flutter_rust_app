@@ -25,13 +25,25 @@ abstract class Native {
 
   FlutterRustBridgeTaskConstMeta get kGreetConstMeta;
 
+  Future<bool> ifSysInfoSupported({dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kIfSysInfoSupportedConstMeta;
+
   Future<Components> getSysInfo({dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kGetSysInfoConstMeta;
 
+  Future<String> getCpu({dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kGetCpuConstMeta;
+
   Stream<Float32List> streamCpuUsage({dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kStreamCpuUsageConstMeta;
+
+  Future<int> calculate({required int firstValue, required int secondValue, required Operator operator, dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kCalculateConstMeta;
 }
 
 class Components {
@@ -50,6 +62,13 @@ class Components {
     required this.hostName,
     required this.memory,
   });
+}
+
+enum Operator {
+  Plus,
+  Minus,
+  Multiply,
+  Divide,
 }
 
 enum Platform {

@@ -2,12 +2,8 @@
 // When adding new code to your project, note that only items used
 // here will be transformed to their Dart equivalents.
 
-use std::time::Duration;
-
 use flutter_rust_bridge::StreamSink;
-// A plain enum without any fields. This is similar to Dart- or C-style enums.
-// flutter_rust_bridge is capable of generating code for enums with fields
-// (@freezed classes in Dart and tagged unions in C).
+use std::time::Duration;
 use sysinfo::{CpuExt, System, SystemExt};
 
 pub enum Platform {
@@ -80,6 +76,10 @@ pub struct Components {
     pub memory: u64,
 }
 
+pub fn if_sys_info_supported() -> bool {
+    System::IS_SUPPORTED
+}
+
 pub fn get_sys_info() -> Components {
     let mut sys = System::new_all();
 
@@ -97,6 +97,19 @@ pub fn get_sys_info() -> Components {
     };
 }
 
+pub fn get_cpu() -> String {
+    let mut sys = System::new_all();
+
+    // First we update all information of our `System` struct.
+    sys.refresh_all();
+    let cpu = sys.cpus().first();
+
+    match cpu {
+        Some(e) => return format!("{}", e.brand()),
+        None => return String::from("No Data"),
+    }
+}
+
 pub fn stream_cpu_usage(sink: StreamSink<Vec<f32>>) {
     let mut sys = System::new();
 
@@ -112,5 +125,22 @@ pub fn stream_cpu_usage(sink: StreamSink<Vec<f32>>) {
         // Sleeping to let time for the system to run for long
         // enough to have useful information.
         std::thread::sleep(Duration::new(2, 0));
+    }
+}
+
+pub enum Operator {
+    Plus,
+    Minus,
+    Multiply,
+    Divide,
+}
+
+pub fn calculate(first_value: i32, second_value: i32, operator: Operator) -> i32 {
+    match operator {
+        Operator::Plus => first_value + second_value,
+        Operator::Minus => first_value - second_value,
+        Operator::Multiply => first_value * second_value,
+        Operator::Divide => first_value / second_value,
+        _ => 0,
     }
 }

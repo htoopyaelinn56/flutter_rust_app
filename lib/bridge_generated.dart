@@ -85,6 +85,21 @@ class NativeImpl implements Native {
         argNames: ["name"],
       );
 
+  Future<bool> ifSysInfoSupported({dynamic hint}) {
+    return _platform.executeNormal(FlutterRustBridgeTask(
+      callFfi: (port_) => _platform.inner.wire_if_sys_info_supported(port_),
+      parseSuccessData: _wire2api_bool,
+      constMeta: kIfSysInfoSupportedConstMeta,
+      argValues: [],
+      hint: hint,
+    ));
+  }
+
+  FlutterRustBridgeTaskConstMeta get kIfSysInfoSupportedConstMeta => const FlutterRustBridgeTaskConstMeta(
+        debugName: "if_sys_info_supported",
+        argNames: [],
+      );
+
   Future<Components> getSysInfo({dynamic hint}) {
     return _platform.executeNormal(FlutterRustBridgeTask(
       callFfi: (port_) => _platform.inner.wire_get_sys_info(port_),
@@ -97,6 +112,21 @@ class NativeImpl implements Native {
 
   FlutterRustBridgeTaskConstMeta get kGetSysInfoConstMeta => const FlutterRustBridgeTaskConstMeta(
         debugName: "get_sys_info",
+        argNames: [],
+      );
+
+  Future<String> getCpu({dynamic hint}) {
+    return _platform.executeNormal(FlutterRustBridgeTask(
+      callFfi: (port_) => _platform.inner.wire_get_cpu(port_),
+      parseSuccessData: _wire2api_String,
+      constMeta: kGetCpuConstMeta,
+      argValues: [],
+      hint: hint,
+    ));
+  }
+
+  FlutterRustBridgeTaskConstMeta get kGetCpuConstMeta => const FlutterRustBridgeTaskConstMeta(
+        debugName: "get_cpu",
         argNames: [],
       );
 
@@ -113,6 +143,24 @@ class NativeImpl implements Native {
   FlutterRustBridgeTaskConstMeta get kStreamCpuUsageConstMeta => const FlutterRustBridgeTaskConstMeta(
         debugName: "stream_cpu_usage",
         argNames: [],
+      );
+
+  Future<int> calculate({required int firstValue, required int secondValue, required Operator operator, dynamic hint}) {
+    var arg0 = api2wire_i32(firstValue);
+    var arg1 = api2wire_i32(secondValue);
+    var arg2 = api2wire_operator(operator);
+    return _platform.executeNormal(FlutterRustBridgeTask(
+      callFfi: (port_) => _platform.inner.wire_calculate(port_, arg0, arg1, arg2),
+      parseSuccessData: _wire2api_i32,
+      constMeta: kCalculateConstMeta,
+      argValues: [firstValue, secondValue, operator],
+      hint: hint,
+    ));
+  }
+
+  FlutterRustBridgeTaskConstMeta get kCalculateConstMeta => const FlutterRustBridgeTaskConstMeta(
+        debugName: "calculate",
+        argNames: ["firstValue", "secondValue", "operator"],
       );
 
   void dispose() {
@@ -171,6 +219,16 @@ class NativeImpl implements Native {
 }
 
 // Section: api2wire
+
+@protected
+int api2wire_i32(int raw) {
+  return raw;
+}
+
+@protected
+int api2wire_operator(Operator raw) {
+  return api2wire_i32(raw.index);
+}
 
 @protected
 int api2wire_u8(int raw) {
@@ -322,6 +380,17 @@ class NativeWire implements FlutterRustBridgeWireBase {
   late final _wire_greetPtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Int64, ffi.Pointer<wire_uint_8_list>)>>('wire_greet');
   late final _wire_greet = _wire_greetPtr.asFunction<void Function(int, ffi.Pointer<wire_uint_8_list>)>();
 
+  void wire_if_sys_info_supported(
+    int port_,
+  ) {
+    return _wire_if_sys_info_supported(
+      port_,
+    );
+  }
+
+  late final _wire_if_sys_info_supportedPtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Int64)>>('wire_if_sys_info_supported');
+  late final _wire_if_sys_info_supported = _wire_if_sys_info_supportedPtr.asFunction<void Function(int)>();
+
   void wire_get_sys_info(
     int port_,
   ) {
@@ -333,6 +402,17 @@ class NativeWire implements FlutterRustBridgeWireBase {
   late final _wire_get_sys_infoPtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Int64)>>('wire_get_sys_info');
   late final _wire_get_sys_info = _wire_get_sys_infoPtr.asFunction<void Function(int)>();
 
+  void wire_get_cpu(
+    int port_,
+  ) {
+    return _wire_get_cpu(
+      port_,
+    );
+  }
+
+  late final _wire_get_cpuPtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Int64)>>('wire_get_cpu');
+  late final _wire_get_cpu = _wire_get_cpuPtr.asFunction<void Function(int)>();
+
   void wire_stream_cpu_usage(
     int port_,
   ) {
@@ -343,6 +423,23 @@ class NativeWire implements FlutterRustBridgeWireBase {
 
   late final _wire_stream_cpu_usagePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Int64)>>('wire_stream_cpu_usage');
   late final _wire_stream_cpu_usage = _wire_stream_cpu_usagePtr.asFunction<void Function(int)>();
+
+  void wire_calculate(
+    int port_,
+    int first_value,
+    int second_value,
+    int operator_,
+  ) {
+    return _wire_calculate(
+      port_,
+      first_value,
+      second_value,
+      operator_,
+    );
+  }
+
+  late final _wire_calculatePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Int64, ffi.Int32, ffi.Int32, ffi.Int32)>>('wire_calculate');
+  late final _wire_calculate = _wire_calculatePtr.asFunction<void Function(int, int, int, int)>();
 
   ffi.Pointer<wire_uint_8_list> new_uint_8_list_0(
     int len,

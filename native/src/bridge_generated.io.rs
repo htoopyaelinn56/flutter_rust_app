@@ -22,13 +22,28 @@ pub extern "C" fn wire_greet(port_: i64, name: *mut wire_uint_8_list) {
 }
 
 #[no_mangle]
+pub extern "C" fn wire_if_sys_info_supported(port_: i64) {
+    wire_if_sys_info_supported_impl(port_)
+}
+
+#[no_mangle]
 pub extern "C" fn wire_get_sys_info(port_: i64) {
     wire_get_sys_info_impl(port_)
 }
 
 #[no_mangle]
+pub extern "C" fn wire_get_cpu(port_: i64) {
+    wire_get_cpu_impl(port_)
+}
+
+#[no_mangle]
 pub extern "C" fn wire_stream_cpu_usage(port_: i64) {
     wire_stream_cpu_usage_impl(port_)
+}
+
+#[no_mangle]
+pub extern "C" fn wire_calculate(port_: i64, first_value: i32, second_value: i32, operator: i32) {
+    wire_calculate_impl(port_, first_value, second_value, operator)
 }
 
 // Section: allocate functions
