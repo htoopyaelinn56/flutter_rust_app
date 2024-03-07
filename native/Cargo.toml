@@ -11,4 +11,4 @@ crate-type = ["cdylib", "staticlib"]
 [dependencies]
 anyhow = "1"
 flutter_rust_bridge = "1"
-sysinfo = "0.29.7"
+sysinfo = "0.30.7"
